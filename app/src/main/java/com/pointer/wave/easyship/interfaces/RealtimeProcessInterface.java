@@ -1,6 +1,6 @@
 package com.pointer.wave.easyship.interfaces;
 
-import com.pointer.wave.easyship.utils.RealtimeProcess;
+import com.pointer.wave.easyship.core.RealtimeProcess;
 
 public interface RealtimeProcessInterface {
     void onNewStdoutListener(RealtimeProcess.MSG msg);

@@ -24,8 +24,7 @@ import com.pointer.wave.easyship.FlashActivity;
 import com.pointer.wave.easyship.R;
 import com.pointer.wave.easyship.core.CacheDao;
 import com.pointer.wave.easyship.interfaces.RealtimeProcessInterface;
-import com.pointer.wave.easyship.utils.KeepShellPublic;
-import com.pointer.wave.easyship.utils.RealtimeProcess;
+import com.pointer.wave.easyship.core.RealtimeProcess;
 import com.pointer.wave.easyship.utils.ShellUtil;
 
 import java.io.File;

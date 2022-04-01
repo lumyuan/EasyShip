@@ -17,6 +17,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 核心配置加载类，不过从0.0.2版本开始后sh执行体迁移到RealtimeProcess类了
+ */
 public class CacheDao {
 
     private String rootDir;
@@ -28,7 +31,6 @@ public class CacheDao {
     private String shellPath;
     private final List<OnRunTimeListener> onRunTimeListeners = new ArrayList<>();
     private final List<OnProcessDestroyListener> onProcessDestroyListeners = new ArrayList<>();
-    private final List<OnProcessErrorListener> onProcessErrorListeners = new ArrayList<>();
     private final MSG msg;
     public final String _7zaName = "7za";
     public final String lisName = "magisk_library.sh";
@@ -45,9 +47,6 @@ public class CacheDao {
         File coreFile = new File(shellFilePath);
         if (!coreFile.exists()) coreFile.mkdirs();
 
-//        sh = sh.replace("$workdir", new File(workdir).getParentFile().getAbsolutePath());
-//        sh = sh.replace("$romName", new File(workdir).getName());
-//        sh = sh.replace("$appFileDir", rootDir);
         FileUtil fileUtil = new FileUtil(shellFilePath + "/" + shellFile);
         fileUtil.writeText(sh);
         shellPath = fileUtil.getPath();
@@ -70,9 +69,6 @@ public class CacheDao {
         File coreFile = new File(shellFilePath);
         if (!coreFile.exists()) coreFile.mkdirs();
 
-//        sh = sh.replace("$workdir", new File(workdir).getParentFile().getAbsolutePath());
-//        sh = sh.replace("$romName", new File(workdir).getName());
-//        sh = sh.replace("$appFileDir", rootDir);
         FileUtil fileUtil = new FileUtil(shellFilePath + "/" + shellFile);
         fileUtil.writeText(sh);
         shellPath = fileUtil.getPath();
@@ -168,7 +164,7 @@ public class CacheDao {
         }
         boolean isCopses = false;
         try {
-            InputStream is = EasyShip.getContext().getAssets().open(filename);//从assets文件夹中复制文件
+            InputStream is = EasyShip.getContext().getAssets().open(filename);
             File file = new File(workdir + "/" + filename);
             OutputStream fos = new FileUtil(file.getPath()).openOutputStream();
             byte[] buffer = new byte[1024];

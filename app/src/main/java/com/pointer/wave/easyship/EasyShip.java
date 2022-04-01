@@ -7,7 +7,7 @@ import android.content.Context;
 import com.pointer.wave.easyship.common.crash.CrashHandler;
 import com.pointer.wave.easyship.core.CacheDao;
 import com.pointer.wave.easyship.utils.KeepShellPublic;
-import com.pointer.wave.easyship.utils.RealtimeProcess;
+import com.pointer.wave.easyship.core.RealtimeProcess;
 
 
 public class EasyShip extends Application {
@@ -27,11 +27,13 @@ public class EasyShip extends Application {
 
         dao = new CacheDao();
         new Thread(()->{
+            //初始化Magisk的shell函数库
             String cmdSync = KeepShellPublic.INSTANCE.doCmdSync(". " + dao.getShellFilePath() + "/" + dao.lisName + "\n" +
                     "mount_partitions\n");
             String[] split = cmdSync.split("\n");
             System.arraycopy(split, 0, info, 0, split.length);
         }).start();
+        //异常捕获
         CrashHandler.init(this);
         isVab = isVAB();
     }

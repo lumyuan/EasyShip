@@ -1,4 +1,4 @@
-package com.pointer.wave.easyship.utils;
+package com.pointer.wave.easyship.core;
 
 import com.pointer.wave.easyship.core.CacheDao;
 import com.pointer.wave.easyship.interfaces.RealtimeProcessInterface;
@@ -23,7 +23,7 @@ public class RealtimeProcess{
     private BufferedReader readStdout = null;
     private BufferedReader readStderr = null;
     // 回调用到的接口
-    private RealtimeProcessInterface mInterface = null;
+    private RealtimeProcessInterface mInterface;
     private int resultCode = 0;
     private String ROOT_DIR = null;
     private String tmp1 = null;
