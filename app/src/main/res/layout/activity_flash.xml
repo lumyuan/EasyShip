@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".FlashActivity"
+    android:background="@color/background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_300">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardElevation="@dimen/dp_0"
+            app:cardBackgroundColor="@android:color/transparent"
+            android:layout_centerInParent="true"
+            android:id="@+id/card_view">
+
+            <me.itangqi.waveloadingview.WaveLoadingView
+                android:id="@+id/wave_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:wlv_borderColor="@color/white"
+                app:wlv_progressValue="0"
+                app:wlv_round_rectangle="false"
+                app:wlv_shapeType="rectangle"
+                app:wlv_titleCenterColor="@android:color/white"
+                app:wlv_titleCenterSize="0sp"
+                app:wlv_titleCenterStrokeColor="@android:color/holo_blue_dark"
+                app:wlv_titleCenterStrokeWidth="3dp"
+                app:wlv_triangle_direction="north"
+                app:wlv_waveAmplitude="25"
+                app:wlv_waveColor="@color/background"
+                app:wlv_wave_background_Color="@color/green"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="开始刷写ROM"
+                android:textSize="@dimen/sp_20"
+                android:gravity="center"
+                android:id="@+id/title"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
+
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/dp_15"
+        android:layout_marginEnd="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_20">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/dp_15"
+            app:cardElevation="@dimen/dp_0"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/dp_5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/dp_20">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint=" 选择刷机包"
+                    android:background="@android:color/transparent"
+                    android:textColorHint="@color/gray_50"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/sp_17"
+                    android:singleLine="true"
+                    android:ellipsize="middle"
+                    android:id="@+id/rom_path"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:cardCornerRadius="@dimen/dp_15"
+            app:cardElevation="@dimen/dp_0"
+            android:id="@+id/select_button"
+            app:cardBackgroundColor="@color/indicator_color"
+            android:layout_marginStart="@dimen/dp_10">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="选择"
+                android:gravity="center"
+                android:layout_margin="@dimen/dp_15"
+                android:textColor="@color/white" />
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_20"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/dp_15"
+        android:layout_marginEnd="@dimen/dp_15">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="开始刷机"
+            android:textSize="@dimen/sp_20"
+            android:textColor="@color/white"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:id="@+id/start_flash"
+            android:background="@drawable/shape_flash_button"
+            android:paddingTop="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingStart="@dimen/dp_20"
+            android:paddingEnd="@dimen/dp_20"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/dp_15"
+        app:cardElevation="@dimen/dp_0"
+        app:cardBackgroundColor="@color/white"
+        android:layout_marginStart="@dimen/dp_15"
+        android:layout_marginEnd="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_15"
+        android:id="@+id/tips_card">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/dp_15">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_35"
+                    android:layout_height="@dimen/dp_35"
+                    android:src="@mipmap/ic_tips"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:text="小提示"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/sp_17"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tips_title"
+                android:textColor="@color/gray_50"
+                android:text="@string/app_name"
+                android:layout_marginTop="@dimen/dp_10"
+                android:textSize="@dimen/sp_14"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="@dimen/dp_15"
+        app:cardElevation="@dimen/dp_0"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_marginStart="@dimen/dp_15"
+        android:layout_marginEnd="@dimen/dp_15">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/dp_15">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logcat"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/sp_14"
+                android:layout_marginBottom="@dimen/dp_10"/>
+
+            <com.pointer.wave.easyship.editor.TextEditor
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/editor"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
