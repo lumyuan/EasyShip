@@ -37,7 +37,7 @@ import java.util.ArrayList;
 public abstract class BaseActivity extends AppCompatActivity{
 
     @SuppressLint("StaticFieldLeak")
-    public static Activity mContext;
+    public static AppCompatActivity mContext;
 
     private ArrayList<String> mPermissionList;
     String[] permissions = new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE };

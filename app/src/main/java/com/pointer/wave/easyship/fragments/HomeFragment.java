@@ -31,6 +31,7 @@ import com.lxj.xpopup.interfaces.OnCancelListener;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.pointer.wave.easyship.EasyShip;
 import com.pointer.wave.easyship.FlashActivity;
+import com.pointer.wave.easyship.MainActivity;
 import com.pointer.wave.easyship.R;
 import com.pointer.wave.easyship.common.activity.BaseActivity;
 import com.pointer.wave.easyship.pojo.TipsBen;
@@ -78,7 +79,7 @@ public class HomeFragment extends Fragment implements TouchFeedback.OnFeedBackLi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        TouchFeedback touchFeedback = TouchFeedback.newInstance(getContext());
+        TouchFeedback touchFeedback = TouchFeedback.newInstance(MainActivity.mContext);
         View inflate = inflater.inflate(R.layout.fragment_home, container, false);
         WaveLoadingView waveLoadingView = inflate.findViewById(R.id.wave_view);
         waveLoadingView.setWaveShiftRatio(0.75f);
@@ -98,7 +99,7 @@ public class HomeFragment extends Fragment implements TouchFeedback.OnFeedBackLi
         },0);
 
         //初始化设备信息
-        AndroidInfo androidInfo = new AndroidInfo(getContext());
+        AndroidInfo androidInfo = new AndroidInfo(MainActivity.mContext);
         inflate.<TextView>findViewById(R.id.main_device_info).setText("设备型号：" + androidInfo.getBrand() + " " + androidInfo.getModel() + "    V-AB：" + String.valueOf(EasyShip.isVab).toUpperCase());
 
         final TextView mainTips = inflate.findViewById(R.id.main_tips);
@@ -107,8 +108,8 @@ public class HomeFragment extends Fragment implements TouchFeedback.OnFeedBackLi
         post.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                new Handler(getContext().getMainLooper()).post(()->{
-                    mainTips.setText(getClickableHtml(getContext().getString(R.string.main_tips)));
+                new Handler(MainActivity.mContext.getMainLooper()).post(()->{
+                    mainTips.setText(getClickableHtml(MainActivity.mContext.getString(R.string.main_tips)));
                 });
             }
 
@@ -117,13 +118,13 @@ public class HomeFragment extends Fragment implements TouchFeedback.OnFeedBackLi
                 boolean successful = response.isSuccessful();
                 assert response.body() != null;
                 String string = response.body().string();
-                new Handler(getContext().getMainLooper()).post(()->{
+                new Handler(MainActivity.mContext.getMainLooper()).post(()->{
                     if (successful){
                         Gson gson = new Gson();
                         TipsBen tipsBen = gson.fromJson(string, TipsBen.class);
                         mainTips.setText(getClickableHtml(tipsBen.getContent().replace("\n", "<br>")));
                     }else {
-                        mainTips.setText(getClickableHtml(getContext().getString(R.string.main_tips)));
+                        mainTips.setText(getClickableHtml(MainActivity.mContext.getString(R.string.main_tips)));
                     }
                 });
             }
@@ -150,7 +151,7 @@ public class HomeFragment extends Fragment implements TouchFeedback.OnFeedBackLi
                     Intent intent = new Intent();
                     intent.setAction("android.intent.action.VIEW");
                     intent.setData(Uri.parse(urlSpan.getURL()));
-                    getContext().startActivity(intent);
+                    MainActivity.mContext.startActivity(intent);
                 }
             }
         };
@@ -173,20 +174,20 @@ public class HomeFragment extends Fragment implements TouchFeedback.OnFeedBackLi
         int id = view.getId();
         switch (id){
             case R.id.help_button:
-                new XPopup.Builder(getContext())
+                new XPopup.Builder(MainActivity.mContext)
                         .isDestroyOnDismiss(true)
                         .asConfirm("使用方法", "准备工作：\n下载好与本设备对应的刷机包，并且给软件授予相应的权限\n\n使用方法：\n1. 点击”开始更新“进入刷机界面\n2. 点击”选择“按钮选择下载好的刷机包\n3. 点击”开始刷机“按钮启动刷机服务并等待服务结束\n4. 根据提示安装面具\n5. 重启手机即可",
                                 "", "知道了", null, null, true).show();
                 break;
             case R.id.waring_button:
-                new XPopup.Builder(getContext())
+                new XPopup.Builder(MainActivity.mContext)
                         .isDestroyOnDismiss(true)
                         .asConfirm("注意事项", "1. 在刷机服务运行时尽量不要关闭软件\n2. 在刷机服务运行时不要将手机关机或重启",
                                 "", "知道了", null, null, true).show();
                 break;
             case R.id.start_button:
                 if (!EasyShip.isVab){
-                    new XPopup.Builder(getContext())
+                    new XPopup.Builder(MainActivity.mContext)
                             .isDestroyOnDismiss(true)
                             .asConfirm("提示", "本软件只支持V-AB分区的设备进行ROM刷写，不支持当前设备~",
                                     "关闭软件", "知道了",

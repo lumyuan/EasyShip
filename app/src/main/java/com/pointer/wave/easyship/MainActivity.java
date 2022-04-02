@@ -64,12 +64,6 @@ public class MainActivity extends BaseActivity {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && !isCancel){
             isCancel = true;
-            LoadingPopupView loadingPopupView = (LoadingPopupView) new XPopup.Builder(mContext)
-                    .dismissOnBackPressed(false)
-                    .isLightNavigationBar(true)
-                    .isViewMode(true)
-                    .asLoading("Loading...")
-                    .show();
             HttpUtils httpUtils = new HttpUtils();
             Call post = httpUtils.post("http://ly.lumnytool.club/api/read.php", new String[]{ "id=103169318", "api=easy_ship", "dir=update", "name=update.txt" });
             post.enqueue(new Callback() {
@@ -102,8 +96,6 @@ public class MainActivity extends BaseActivity {
                                                 }, null, false).show();
                             }
                         }
-                        loadingPopupView.delayDismissWith(0, () -> {
-                        });
                     });
                 }
             });
