@@ -4,16 +4,18 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.impl.LoadingPopupView;
 import com.pointer.wave.easyship.common.activity.BaseActivity;
+import com.pointer.wave.easyship.core.ZoomInTransformer;
 import com.pointer.wave.easyship.fragments.AboutFragment;
 import com.pointer.wave.easyship.fragments.HomeFragment;
 import com.pointer.wave.easyship.pojo.TipsBen;
@@ -25,7 +27,6 @@ import com.pointer.wave.easyship.widget.NavigationBar;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -40,22 +41,40 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setDoubleTouchClose(true);
-        fragments.add(HomeFragment.newInstance());
-        fragments.add(AboutFragment.newInstance());
-        replaceFragment(fragments.get(0));
+
+        fragments.add(new HomeFragment());
+        fragments.add(new AboutFragment());
+
+        ViewPager2 pager = findViewById(R.id.pager);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(fragments,this);
         NavigationBar navigationBar = findViewById(R.id.main_navigation);
+        pager.setAdapter(adapter);
+        pager.setUserInputEnabled(false);
+        // 不需要 ViewPager 动画的话可以删除这一行
+        pager.setPageTransformer(new ZoomInTransformer());
+
         navigationBar.bindData(new String[]{ "开始", "关于" }, new int[] { R.mipmap.ic_home, R.mipmap.ic_settings });
         navigationBar.setPositionListener((view, position) -> {
-            replaceFragment(fragments.get(position));
+            pager.setCurrentItem(position);
         });
-
-    }
-
-    private void replaceFragment(Fragment fragment){
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_show, R.animator.fragment_slide_hide);
-        fragmentTransaction.replace(R.id.main_frame_layout, fragment);
-        fragmentTransaction.commit();
+        // FIXME: 2022/4/4 本来我是想 ViewPager 滑动的时候切换下面的 Tab，但是 Tab 上面那个有动画的 View 似乎没效果，我也不清楚应该怎么修复，就暂时禁用了
+//        pager.registerOnPageChangeCallback((new ViewPager2.OnPageChangeCallback() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                super.onPageSelected(position);
+//                navigationBar.setCurrentItem(position);
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//                super.onPageScrollStateChanged(state);
+//            }
+//        }));
     }
 
     private boolean isCancel;
@@ -99,6 +118,27 @@ public class MainActivity extends BaseActivity {
                     });
                 }
             });
+        }
+    }
+
+    class ViewPagerAdapter extends FragmentStateAdapter{
+
+        private final List<Fragment> fragments;
+
+        ViewPagerAdapter(List<Fragment> fragments,FragmentActivity activity){
+            super(activity);
+            this.fragments = fragments;
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return fragments.size();
         }
     }
 }

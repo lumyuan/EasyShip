@@ -93,7 +93,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
 
     //GSON
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:+'
 
     //WebSocket
     implementation 'org.java-websocket:Java-WebSocket:1.5.2'
@@ -102,4 +102,5 @@ dependencies {
 
     implementation 'com.github.devlight:infinitecycleviewpager:1.0.2'
 
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 }
