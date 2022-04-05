@@ -1,38 +1,28 @@
 package com.pointer.wave.easyship.fragments;
 
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.fragment.app.Fragment;
-
 import android.os.Handler;
-import android.provider.Settings;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnCancelListener;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.pointer.wave.easyship.EasyShip;
 import com.pointer.wave.easyship.FlashActivity;
-import com.pointer.wave.easyship.MainActivity;
 import com.pointer.wave.easyship.R;
+import com.pointer.wave.easyship.base.BaseFragment;
 import com.pointer.wave.easyship.common.activity.BaseActivity;
 import com.pointer.wave.easyship.pojo.TipsBen;
 import com.pointer.wave.easyship.utils.AndroidInfo;
@@ -42,48 +32,28 @@ import com.pointer.wave.easyship.widget.PermissionsDialog;
 import com.pointer.wave.easyship.widget.feedback.TouchFeedback;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import me.itangqi.waveloadingview.WaveLoadingView;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class HomeFragment extends Fragment implements TouchFeedback.OnFeedBackListener {
-
-    public HomeFragment() {
-        // Required empty public constructor
-    }
-
-    public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+public class HomeFragment extends BaseFragment implements TouchFeedback.OnFeedBackListener{
+    private View root;
     private BaseActivity activity;
 
-    @Override
-    public void onAttach(@NonNull Activity activity) {
-        super.onAttach(activity);
-        this.activity = (BaseActivity) activity;
+    public HomeFragment(){
+        super(R.layout.fragment_home);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @SuppressLint("SetTextI18n")
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        TouchFeedback touchFeedback = TouchFeedback.newInstance(MainActivity.mContext);
-        View inflate = inflater.inflate(R.layout.fragment_home, container, false);
-        WaveLoadingView waveLoadingView = inflate.findViewById(R.id.wave_view);
+    protected void initView(View root) {
+        super.initView(root);
+        this.root = root;
+        TouchFeedback touchFeedback = TouchFeedback.newInstance(requireActivity());
+        WaveLoadingView waveLoadingView = root.findViewById(R.id.wave_view);
         waveLoadingView.setWaveShiftRatio(0.75f);
-        View bgView = inflate.findViewById(R.id.bg_view);
+        View bgView = root.findViewById(R.id.bg_view);
         bgView.postDelayed(()->{
             bgView.setLayoutParams(new RelativeLayout.LayoutParams(-1, waveLoadingView.getHeight()));
             new ColorChangeUtils(new int[] {
@@ -98,18 +68,30 @@ public class HomeFragment extends Fragment implements TouchFeedback.OnFeedBackLi
                     bgView).startAnimation();
         },0);
 
-        //初始化设备信息
-        AndroidInfo androidInfo = new AndroidInfo(MainActivity.mContext);
-        inflate.<TextView>findViewById(R.id.main_device_info).setText("设备型号：" + androidInfo.getBrand() + " " + androidInfo.getModel() + "    V-AB：" + String.valueOf(EasyShip.isVab).toUpperCase());
+        touchFeedback.setOnFeedBackListener(this, root.findViewById(R.id.help_button));
+        touchFeedback.setOnFeedBackListener(this, root.findViewById(R.id.waring_button));
+        touchFeedback.setOnFeedBackListener(this, root.findViewById(R.id.start_button));
+        touchFeedback.setOnFeedBackListener(this, root.findViewById(R.id.download_button));
+        touchFeedback.setOnFeedBackListener(this, root.findViewById(R.id.home_tips_card));
 
-        final TextView mainTips = inflate.findViewById(R.id.main_tips);
+    }
+
+    @Override
+    protected void loadSingleData() {
+        super.loadSingleData();
+        activity = (BaseActivity) requireActivity();
+        //初始化设备信息
+        AndroidInfo androidInfo = new AndroidInfo(requireActivity());
+        root.<TextView>findViewById(R.id.main_device_info).setText("设备型号：" + androidInfo.getBrand() + " " + androidInfo.getModel() + "    V-AB：" + String.valueOf(EasyShip.isVab).toUpperCase());
+
+        final TextView mainTips = root.findViewById(R.id.main_tips);
         HttpUtils httpUtils = new HttpUtils();
         Call post = httpUtils.post("http://ly.lumnytool.club/api/read.php", new String[]{ "id=103169318", "api=easy_ship", "dir=home_tips", "name=tips.txt" });
         post.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                new Handler(MainActivity.mContext.getMainLooper()).post(()->{
-                    mainTips.setText(getClickableHtml(MainActivity.mContext.getString(R.string.main_tips)));
+                new Handler(requireActivity().getMainLooper()).post(()->{
+                    mainTips.setText(getClickableHtml(requireActivity().getString(R.string.main_tips)));
                 });
             }
 
@@ -118,29 +100,32 @@ public class HomeFragment extends Fragment implements TouchFeedback.OnFeedBackLi
                 boolean successful = response.isSuccessful();
                 assert response.body() != null;
                 String string = response.body().string();
-                new Handler(MainActivity.mContext.getMainLooper()).post(()->{
+                new Handler(requireActivity().getMainLooper()).post(()->{
                     if (successful){
                         Gson gson = new Gson();
                         TipsBen tipsBen = gson.fromJson(string, TipsBen.class);
                         mainTips.setText(getClickableHtml(tipsBen.getContent().replace("\n", "<br>")));
                     }else {
-                        mainTips.setText(getClickableHtml(MainActivity.mContext.getString(R.string.main_tips)));
+                        mainTips.setText(getClickableHtml(requireActivity().getString(R.string.main_tips)));
                     }
                 });
             }
         });
 
         mainTips.setMovementMethod(LinkMovementMethod.getInstance());
-
-        touchFeedback.setOnFeedBackListener(this, inflate.findViewById(R.id.help_button));
-        touchFeedback.setOnFeedBackListener(this, inflate.findViewById(R.id.waring_button));
-        touchFeedback.setOnFeedBackListener(this, inflate.findViewById(R.id.start_button));
-        touchFeedback.setOnFeedBackListener(this, inflate.findViewById(R.id.download_button));
-        touchFeedback.setOnFeedBackListener(this, inflate.findViewById(R.id.home_tips_card));
-        return inflate;
     }
 
-    public void setLinkClickable(SpannableStringBuilder clickableHtml, URLSpan urlSpan) {
+    private CharSequence getClickableHtml(String text) {
+        Spanned spannedHtml = Html.fromHtml(text);
+        SpannableStringBuilder clickableHtmlBuilder = new SpannableStringBuilder(spannedHtml);
+        URLSpan[] urls = clickableHtmlBuilder.getSpans(0, spannedHtml.length(), URLSpan.class);
+        for (final URLSpan span : urls){
+            setLinkClickable(clickableHtmlBuilder, span);
+        }
+        return clickableHtmlBuilder;
+    }
+
+    private void setLinkClickable(SpannableStringBuilder clickableHtml, URLSpan urlSpan) {
         int start = clickableHtml.getSpanStart(urlSpan);
         int end = clickableHtml.getSpanEnd(urlSpan);
         int flags = clickableHtml.getSpanFlags(urlSpan);
@@ -151,21 +136,11 @@ public class HomeFragment extends Fragment implements TouchFeedback.OnFeedBackLi
                     Intent intent = new Intent();
                     intent.setAction("android.intent.action.VIEW");
                     intent.setData(Uri.parse(urlSpan.getURL()));
-                    MainActivity.mContext.startActivity(intent);
+                    requireActivity().startActivity(intent);
                 }
             }
         };
         clickableHtml.setSpan(clickableSpan, start, end, flags);
-    }
-
-    public CharSequence getClickableHtml(String text) {
-        Spanned spannedHtml = Html.fromHtml(text);
-        SpannableStringBuilder clickableHtmlBuilder = new SpannableStringBuilder(spannedHtml);
-        URLSpan[] urls = clickableHtmlBuilder.getSpans(0, spannedHtml.length(), URLSpan.class);
-        for (final URLSpan span : urls){
-            setLinkClickable(clickableHtmlBuilder, span);
-        }
-        return clickableHtmlBuilder;
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -174,20 +149,20 @@ public class HomeFragment extends Fragment implements TouchFeedback.OnFeedBackLi
         int id = view.getId();
         switch (id){
             case R.id.help_button:
-                new XPopup.Builder(MainActivity.mContext)
+                new XPopup.Builder(requireActivity())
                         .isDestroyOnDismiss(true)
                         .asConfirm("使用方法", "准备工作：\n下载好与本设备对应的刷机包，并且给软件授予相应的权限\n\n使用方法：\n1. 点击”开始更新“进入刷机界面\n2. 点击”选择“按钮选择下载好的刷机包\n3. 点击”开始刷机“按钮启动刷机服务并等待服务结束\n4. 根据提示安装面具\n5. 重启手机即可",
                                 "", "知道了", null, null, true).show();
                 break;
             case R.id.waring_button:
-                new XPopup.Builder(MainActivity.mContext)
+                new XPopup.Builder(requireActivity())
                         .isDestroyOnDismiss(true)
                         .asConfirm("注意事项", "1. 在刷机服务运行时尽量不要关闭软件\n2. 在刷机服务运行时不要将手机关机或重启",
                                 "", "知道了", null, null, true).show();
                 break;
             case R.id.start_button:
                 if (!EasyShip.isVab){
-                    new XPopup.Builder(MainActivity.mContext)
+                    new XPopup.Builder(requireActivity())
                             .isDestroyOnDismiss(true)
                             .asConfirm("提示", "本软件只支持V-AB分区的设备进行ROM刷写，不支持当前设备~",
                                     "关闭软件", "知道了",

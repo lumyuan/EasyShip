@@ -12,7 +12,8 @@ import com.pointer.wave.easyship.core.RealtimeProcess;
 
 public class EasyShip extends Application {
 
-    @SuppressLint("StaticFieldLeak") public static Context context;
+    @SuppressLint("StaticFieldLeak")
+    public static Context context;
     public static CacheDao cacheDao;
     public static boolean isVab;
     private static RealtimeProcess process;

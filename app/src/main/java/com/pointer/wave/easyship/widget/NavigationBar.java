@@ -25,6 +25,7 @@ import java.util.List;
 public class NavigationBar extends LinearLayout{
 
     private static ViewPager pager;
+    private static LinearLayout box;
     private static String[] itemTitles;
     private static int[] itemIds;
     private static List<TabLayout.Tab> tabs = new ArrayList<>();
@@ -66,7 +67,7 @@ public class NavigationBar extends LinearLayout{
         setOrientation(VERTICAL);
         View rootView = View.inflate(context, R.layout.fragment_navigation, null);
         tabLayout = rootView.findViewById(R.id.tabLayout);
-        LinearLayout box = rootView.findViewById(R.id.navigation_box);
+        box = rootView.findViewById(R.id.navigation_box);
         if (pager != null) tabLayout.setupWithViewPager(pager);
         for (int i = 0; i < itemTitles.length; i++) {
             View item = View.inflate(getContext(), R.layout.layout_navigation_item, null);
@@ -106,7 +107,7 @@ public class NavigationBar extends LinearLayout{
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 setCurrentItem(tab.getPosition());
-                positionListener.onChanged(box.getChildAt(tab.getPosition()), tab.getPosition());
+//                positionListener.onChanged(box.getChildAt(tab.getPosition()), tab.getPosition());
             }
 
             @Override
@@ -144,6 +145,7 @@ public class NavigationBar extends LinearLayout{
 
     private int mPosition = 0;
     public void setCurrentItem(int position){
+        positionListener.onChanged(box.getChildAt(position), position);
         postDelayed(()->{
             defaulted(mPosition);
             selected(position);
