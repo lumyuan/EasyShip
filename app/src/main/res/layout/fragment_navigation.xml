@@ -14,10 +14,8 @@
         app:tabIndicator="@drawable/shape_indicator_select"
         app:tabIndicatorColor="@color/indicator_color"
         app:tabIndicatorGravity="center"
-        android:translationZ="@dimen/dp_5"
         app:tabIndicatorHeight="@dimen/dp_10"
         app:tabGravity="fill"
-        app:tabMode="fixed"
         app:tabIndicatorAnimationDuration="500"
         android:background="@android:color/transparent"
         app:tabRippleColor="@android:color/transparent"/>

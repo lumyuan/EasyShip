@@ -2,7 +2,9 @@ package com.pointer.wave.easyship
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +21,6 @@ import com.pointer.wave.easyship.pojo.VersionBen
 import com.pointer.wave.easyship.utils.AndroidInfo
 import com.pointer.wave.easyship.widget.NavigationBar
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -36,12 +37,11 @@ class MainActivity : BaseActivity() {
         val adapter = ViewPagerAdapter(fragments, this)
         val pager = findViewById<ViewPager2>(R.id.pager).apply {
             setAdapter(adapter)
-            isUserInputEnabled = false
-            setPageTransformer(ZoomInTransformer())
+            //isUserInputEnabled = false
         }
 
-        val navigationBar = findViewById<NavigationBar>(R.id.main_navigation).apply {
-            bindData(arrayOf("开始", "关于"), intArrayOf(R.mipmap.ic_home, R.mipmap.ic_settings))
+        findViewById<NavigationBar>(R.id.main_navigation).apply {
+            bindData(pager, arrayOf("开始", "关于"), intArrayOf(R.mipmap.ic_home, R.mipmap.ic_settings))
             setPositionListener { _, position ->
                 pager.currentItem = position
             }

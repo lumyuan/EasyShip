@@ -23,8 +23,8 @@ android {
         applicationId "com.pointer.wave.easyship"
         minSdk 26
         targetSdk 32
-        versionCode 22040215
-        versionName "0.0.4 Preview"
+        versionCode 22041122
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

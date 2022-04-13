@@ -10,6 +10,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,6 +18,7 @@ import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -175,6 +177,19 @@ public class FlashActivity extends BaseActivity implements TouchFeedback.OnFeedB
         touchFeedback.setOnFeedBackListener(this, selectButton);
         touchFeedback.setOnFeedBackListener(this, startFlash);
         touchFeedback.setOnFeedBackListener(this, tipsCard);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            ColorDrawable colorDrawable = new ColorDrawable();
+            colorDrawable.setColor(getColor(R.color.white));
+            colorDrawable.setAlpha(0);
+            getWindow().setBackgroundDrawable(colorDrawable);
+            finishAfterTransition();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private int lastPosition = 0;

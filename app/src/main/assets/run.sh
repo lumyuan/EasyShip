@@ -6,6 +6,8 @@ workdir=$(
 zipDir=$1
 rn=$2
 
+setprop persist.logd.size 8388608
+
 if [ ! -f "/data/7za" ]; then
     cp -r "$workdir"/7za /data
     chmod 777 /data/7za

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.pointer.wave.easyship.R;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class NavigationBar extends LinearLayout{
 
-    private static ViewPager pager;
+    private static ViewPager2 pager;
     private static LinearLayout box;
     private static String[] itemTitles;
     private static int[] itemIds;
@@ -49,7 +50,7 @@ public class NavigationBar extends LinearLayout{
         };
     }
 
-    public void bindData(ViewPager viewPager, String[] titles, int[] ids) {
+    public void bindData(ViewPager2 viewPager, String[] titles, int[] ids) {
         pager = viewPager;
         itemIds = ids;
         itemTitles = titles;
@@ -68,7 +69,7 @@ public class NavigationBar extends LinearLayout{
         View rootView = View.inflate(context, R.layout.fragment_navigation, null);
         tabLayout = rootView.findViewById(R.id.tabLayout);
         box = rootView.findViewById(R.id.navigation_box);
-        if (pager != null) tabLayout.setupWithViewPager(pager);
+
         for (int i = 0; i < itemTitles.length; i++) {
             View item = View.inflate(getContext(), R.layout.layout_navigation_item, null);
             ImageView icon = item.findViewById(R.id.item_icon);
@@ -103,27 +104,19 @@ public class NavigationBar extends LinearLayout{
             box.addView(item);
         }
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                setCurrentItem(tab.getPosition());
-//                positionListener.onChanged(box.getChildAt(tab.getPosition()), tab.getPosition());
-            }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
 
         postDelayed(()->{
             initView();
-            setCurrentItem(mPosition);
+            setCurrentItem(mPosition = tabLayout.getSelectedTabPosition());
+            pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    setCurrentItem(position);
+                    tabLayout.selectTab(tabs.get(position));
+                }
+            });
         },0L);
 
         addView(rootView);

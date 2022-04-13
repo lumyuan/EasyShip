@@ -133,7 +133,8 @@
             android:paddingBottom="@dimen/dp_10"
             android:paddingStart="@dimen/dp_20"
             android:paddingEnd="@dimen/dp_20"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:transitionName="start_button"/>
 
     </LinearLayout>
 

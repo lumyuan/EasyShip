@@ -43,7 +43,7 @@
 
     </LinearLayout>
 
-    <com.pointer.wave.easyship.widget.IOSOverScrollView
+    <com.pointer.wave.easyship.widget.OverScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -492,6 +492,6 @@
 
         </LinearLayout>
 
-    </com.pointer.wave.easyship.widget.IOSOverScrollView>
+    </com.pointer.wave.easyship.widget.OverScrollView>
 
 </LinearLayout>

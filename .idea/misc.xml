@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/drawable/shape_editor.xml" value="0.215" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/drawable/shape_flash_button.xml" value="0.199" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/drawable/shape_indicator.xml" value="0.199" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/drawable/shape_indicator_select.xml" value="0.199" />
@@ -10,12 +11,15 @@
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/activity_flash.xml" value="0.33" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/activity_main.xml" value="0.1802536231884058" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/dialog_full_base.xml" value="0.19114583333333332" />
+        <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/dialog_helps.xml" value="0.33" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/dialog_permissin_write.xml" value="0.22" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/dialog_update_log.xml" value="0.2078125" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/fragment_about.xml" value="0.33" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/fragment_navigation.xml" value="0.19114583333333332" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/item_auto_panel.xml" value="0.19114583333333332" />
+        <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/item_help.xml" value="0.2078125" />
+        <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/item_help_layout.xml" value="0.33" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/item_tips_viewpager.xml" value="0.3707070707070707" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/layout_navigation_item.xml" value="0.19114583333333332" />
         <entry key="..\:/MyAndroidProject/EasyShip/app/src/main/res/layout/symbol_view.xml" value="0.19114583333333332" />

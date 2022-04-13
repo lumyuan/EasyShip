@@ -4,6 +4,7 @@ package com.pointer.wave.easyship.fragments;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -14,11 +15,17 @@ import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.impl.LoadingPopupView;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.pointer.wave.easyship.EasyShip;
 import com.pointer.wave.easyship.FlashActivity;
 import com.pointer.wave.easyship.R;
@@ -28,10 +35,14 @@ import com.pointer.wave.easyship.pojo.TipsBen;
 import com.pointer.wave.easyship.utils.AndroidInfo;
 import com.pointer.wave.easyship.utils.ColorChangeUtils;
 import com.pointer.wave.easyship.utils.HttpUtils;
+import com.pointer.wave.easyship.widget.HelpsDialog;
 import com.pointer.wave.easyship.widget.PermissionsDialog;
 import com.pointer.wave.easyship.widget.feedback.TouchFeedback;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import me.itangqi.waveloadingview.WaveLoadingView;
 import okhttp3.Call;
@@ -155,10 +166,42 @@ public class HomeFragment extends BaseFragment implements TouchFeedback.OnFeedBa
                                 "", "知道了", null, null, true).show();
                 break;
             case R.id.waring_button:
-                new XPopup.Builder(requireActivity())
-                        .isDestroyOnDismiss(true)
-                        .asConfirm("注意事项", "1. 在刷机服务运行时尽量不要关闭软件\n2. 在刷机服务运行时不要将手机关机或重启",
-                                "", "知道了", null, null, true).show();
+                LoadingPopupView loadingPopupView = (LoadingPopupView) new XPopup.Builder(requireActivity())
+                        .dismissOnBackPressed(false)
+                        .isLightNavigationBar(true)
+                        .isViewMode(true)
+                        .asLoading("Loading...")
+                        .show();
+                HttpUtils httpUtils = new HttpUtils();
+                Call post = httpUtils.post("http://ly.lumnytool.club/api/list_dir.php", new String[]{ "id=103169318", "api=easy_ship", "dir=helps", "m=false" });
+                post.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        new Handler(activity.getMainLooper()).post(()->{
+                            loadingPopupView.delayDismissWith(0, () -> Toast.makeText(requireActivity(), e.toString(), Toast.LENGTH_SHORT).show());
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        boolean successful = response.isSuccessful();
+                        assert response.body() != null;
+                        String string = response.body().string();
+                        new Handler(activity.getMainLooper()).post(()->{
+                            if (successful){
+                                List<String> list = new ArrayList<>();
+                                String[] jsonArray = string.split("<br>");
+                                list.addAll(Arrays.asList(jsonArray));
+                                HelpsDialog.showDialog(activity, list);
+                                loadingPopupView.delayDismissWith(0, () -> {
+                                });
+                            }else {
+                                loadingPopupView.delayDismissWith(0, () -> Toast.makeText(requireActivity(), "无法连接服务器", Toast.LENGTH_SHORT).show());
+                            }
+                        });
+                    }
+                });
+
                 break;
             case R.id.start_button:
                 if (!EasyShip.isVab){
@@ -172,13 +215,34 @@ public class HomeFragment extends BaseFragment implements TouchFeedback.OnFeedBa
                 }else if (!activity.hasWritePermission()){
                     PermissionsDialog.showDialog(activity);
                 } else {
-                    startActivity(new Intent(getActivity(), FlashActivity.class));
+                    ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            requireActivity(), new Pair<>(root.<TextView>findViewById(R.id.start_button), "start_button"));
+                    Intent intent = new Intent(requireActivity(), FlashActivity.class);
+                    ActivityCompat.startActivity(requireActivity(), intent, activityOptions.toBundle());
+                    //startActivity(new Intent(getActivity(), FlashActivity.class));
                 }
                 break;
             case R.id.download_button:
-
+                String device = Build.DEVICE;
+                new XPopup.Builder(requireActivity())
+                        .isDestroyOnDismiss(true)
+                        .asConfirm("温馨提示", "当前ROM下载功能由第三方网站提供，所以ROM历代版本可能会有遗漏，请以网站实际情况为准",
+                                "网站①", "网站②", () -> {
+                                    String url = "https://xiaomirom.com/series/" + (device.equals("mars") ? "star" : device) + "/";
+                                    href(url);
+                                }, () ->  {
+                                    String url = "http://miui.511i.cn/";
+                                    href(url);
+                                }, false).show();
                 break;
         }
+    }
+
+    private void href(String url){
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        intent.setData(Uri.parse(url));
+        requireActivity().startActivity(intent);
     }
 
     @Override
