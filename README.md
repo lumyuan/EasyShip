@@ -15,3 +15,5 @@
 企鹅交流群：1009818916
 
 EasyShip永久保持免费且开源，欢迎使用！
+
+# <a href="https://github.com/lumyuan/EasyShip2Download">一叶孤舟2发布！</a>
